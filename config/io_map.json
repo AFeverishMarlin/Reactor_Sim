@@ -196,6 +196,12 @@
       "scale_min": 0,
       "scale_max": 100,
       "description": "Pump actual speeds (MCP-1..4), 0\u2013100% \u2192 0\u201332767"
+    },
+    "target_mw": {
+      "address": 10,
+      "scale_min": 0,
+      "scale_max": 1100,
+      "description": "Grid demand target MWe (0 when not in a shift game mode)"
     }
   },
   "holding_registers": {

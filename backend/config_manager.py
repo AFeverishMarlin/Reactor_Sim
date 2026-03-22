@@ -121,6 +121,10 @@ class ConfigManager:
         DATA_DIR.mkdir(parents=True, exist_ok=True)
         self.network  = self._load_or_create("network.json",  DEFAULT_NETWORK)
         self.io_map   = self._load_or_create("io_map.json",   DEFAULT_IO_MAP)
+        # Merge any new default entries added in code updates into the loaded file
+        if self._merge_io_map_defaults():
+            self.save_io_map(self.io_map)
+            log.info("io_map.json updated with new default registers")
 
     def _load_or_create(self, filename: str, default: dict) -> dict:
         path = CONFIG_DIR / filename
@@ -136,6 +140,26 @@ class ConfigManager:
             json.dump(default, f, indent=2)
         log.info("Created default config: %s", filename)
         return default
+
+    def _merge_io_map_defaults(self) -> bool:
+        """Merge any registers present in DEFAULT_IO_MAP but missing from the
+        loaded io_map. This means new registers added in code updates will
+        automatically appear in the CFG panel without requiring users to delete
+        their existing io_map.json. Returns True if any entries were added."""
+        changed = False
+        for table, entries in DEFAULT_IO_MAP.items():
+            if table == "_comment" or not isinstance(entries, dict):
+                continue
+            if table not in self.io_map:
+                self.io_map[table] = {}
+                changed = True
+            for key, default_def in entries.items():
+                if key not in self.io_map[table]:
+                    self.io_map[table][key] = default_def
+                    log.info("io_map: added missing register %s.%s (addr %s)",
+                             table, key, default_def.get("address", "?"))
+                    changed = True
+        return changed
 
     def save_network(self, data: dict):
         self.network = data
