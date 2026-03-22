@@ -242,6 +242,7 @@ All values are 0–32767 mapped from engineering units as configured in io_map.j
 | turbine_eff | 7 | 0% | 35% | Turbine efficiency |
 | avg_iodine | 8 | 0 | 1 | Average Iodine-135 (normalised) |
 | avg_xenon | 9 | 0 | 1 | Average Xenon-135 (normalised) |
+| target_mw | 10 | 0 MWe | 1100 MWe | Grid demand target (0 when not in a shift game mode) |
 
 **Temperature sensors (default base 100):** TS-01 → address 100, TS-02 → 101, etc.
 Range: 0–500°C → 0–32767. Value 32767 indicates sensor FAULT/no data.

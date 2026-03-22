@@ -262,6 +262,7 @@ class ModbusBridge:
         _ir("turbine_eff",    ph.turbine_efficiency())
         _ir("avg_iodine",     st.iodine)
         _ir("avg_xenon",      st.xenon)
+        _ir("target_mw",      st.target_mw)  # grid demand target (0 when not in shift mode)
 
         # T-sensors
         ts_base = r_defs.get("tsensor_base", {}).get("address", 100)

@@ -195,7 +195,7 @@ real rod movement rate limit in the simulator physics.
 
 | FC | Address | Count | Content |
 |---|---|---|---|
-| 04 (IR) | 0 | 10 | Plant-wide: power, MWe, pressure, flow, void, temps, turbine, I/Xe |
+| 04 (IR) | 0 | 11 | Plant-wide: power, MWe, pressure, flow, void, temps, turbine, I/Xe, **target MWe (reg 10)** |
 | 04 (IR) | 100 | 30 | T-sensor temperatures |
 | 04 (IR) | 200 | 30 | CR actual positions |
 | 04 (IR) | 250 | 4  | Pump actual speeds |

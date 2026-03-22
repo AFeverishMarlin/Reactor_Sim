@@ -1493,6 +1493,7 @@ function goMainMenu() {
   // Show start screen
   document.getElementById('start-screen').style.display='flex';
   // Restore speed to normal when user starts next game
+  send({cmd:'set_target_mw', target: 0});
   addLog('Returned to main menu.','info');
 }
 
@@ -1674,6 +1675,7 @@ function gameTick() {
   if (GAME.mode === 'dispatch') {
     const demand = getCurrentDemand(shiftElapsed);
     GAME.currentDemand = demand;
+    send({cmd:'set_target_mw', target: demand});  // push to backend for Modbus register
     const err = Math.abs(outputMW - demand) / demand;
     let pts = 0;
     if (!S.meltdown && !S.scramming) {
@@ -1695,6 +1697,10 @@ function gameTick() {
 
   // ── INCIDENT MODE ────
   if (GAME.mode === 'incident') {
+    // Incident mode has no grid demand schedule, but we push a nominal target
+    // so the Modbus target_mw register is non-zero during shift.
+    // Target = 700 MWe (a typical mid-range operating point).
+    if (GAME.tickCount % 20 === 0) send({cmd:'set_target_mw', target: 700});
     // Score: points per tick based on output (max 10 pts/tick at full power)
     if (!S.meltdown && !S.scramming) {
       const powerFrac = Math.min(1, S.power/80);
@@ -1885,6 +1891,7 @@ function endShift() {
   stats.innerHTML = rows.map(([l,v])=>`<div class="end-row"><span>${l}</span><span>${v}</span></div>`).join('');
   document.getElementById('end-comment').textContent = comments[GAME.mode] || '';
   document.getElementById('end-screen').style.display = 'flex';
+  send({cmd:'set_target_mw', target: 0});
 
   addLog('=== SHIFT ENDED — SCORE: '+sc.toLocaleString()+' pts ===','info');
 }

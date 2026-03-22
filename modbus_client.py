@@ -36,6 +36,7 @@ Register map used (all 0-based, matches simulator defaults):
     7   turbine_eff %       (0–35    → 0–32767)
     8   avg_iodine          (0–1     → 0–32767)
     9   avg_xenon           (0–1     → 0–32767)
+    10  target_mw           (0–1100  → 0–32767, 0 = not in shift mode)
     100–129  T-sensors °C   (0–500   → 0–32767, 32767=fault)
     150–169  F-sensors       (0–1.5  → 0–32767, 32767=fault)
     200–229  CR positions %  (0–100  → 0–32767)
@@ -185,6 +186,7 @@ class ProcessData:
     turbine_eff:  float = 0.0
     xenon:        float = 0.0
     iodine:       float = 0.0
+    target_mw:    float = 0.0  # grid demand target from game mode (0 = not in shift)
     # Arrays (30 rods, 30 T-sensors, 4 pumps)
     rod_pos:      List[float] = field(default_factory=lambda: [0.0]*NUM_RODS)
     t_sensors:    List[float] = field(default_factory=lambda: [0.0]*NUM_TSENSORS)
@@ -347,7 +349,7 @@ class ReactorController:
         d = self._data
 
         # Plant-wide (10 registers starting at 0)
-        regs = self._read_ir(0, 10)
+        regs = self._read_ir(0, 11)  # 0-9 plant-wide + 10 target_mw
         if regs is None:
             d.connected = False
             d.read_error = "Read failed — is the simulator running?"
@@ -363,6 +365,7 @@ class ReactorController:
         d.turbine_eff  = raw_to_eng(regs[7], 0,    35)
         d.iodine       = raw_to_eng(regs[8], 0,    1)
         d.xenon        = raw_to_eng(regs[9], 0,    1)
+        d.target_mw    = raw_to_eng(regs[10], 0, 1100) if len(regs) > 10 else 0.0
 
         # T-sensors (addresses 100–129)
         ts_regs = self._read_ir(100, NUM_TSENSORS)
@@ -470,10 +473,10 @@ class ReactorController:
         d = self._data
 
         # ── Layer 1: PI power controller ──────────────────────────────────
-        # Use MWe error as the controlled variable.
-        # Xenon suppression is accounted for implicitly — the PI integrator
-        # will naturally demand higher rod withdrawal during a xenon pit.
-        error_mw  = self.setpoint_mw - d.output_mw
+        # If the simulator is in a shift game mode, the target_mw register
+        # holds the current grid demand. Track it automatically.
+        effective_sp = d.target_mw if d.target_mw > 10 else self.setpoint_mw
+        error_mw  = effective_sp - d.output_mw
         base_sp   = self._power_pid.update(error_mw, dt)
 
         # ── Layer 2: Spatial flattening using T-sensor proximity ──────────
@@ -738,9 +741,12 @@ def run_curses(stdscr, ctrl: ReactorController):
         lbl(row,   0, "── PROCESS VALUES ──────────────", C_INFO)
         row += 1
 
-        mw_c = _colour(d.output_mw, ctrl.setpoint_mw * 0.85,
-                       ctrl.setpoint_mw * 1.1, C_NORM, C_WARN, C_CRIT)
-        err  = d.output_mw - ctrl.setpoint_mw
+        effective_sp = d.target_mw if d.target_mw > 10 else ctrl.setpoint_mw
+        mw_c = _colour(d.output_mw, effective_sp * 0.85,
+                       effective_sp * 1.1, C_NORM, C_WARN, C_CRIT)
+        err  = d.output_mw - effective_sp
+        if d.target_mw > 10:
+            lbl(row, 0, f"  Game Demand: {d.target_mw:>5.0f} MWe  [TRACKING]", C_WARN); row+=1
         lbl(row,   0, f"  Setpoint  : {ctrl.setpoint_mw:>6.0f} MWe", C_INFO); row+=1
         lbl(row,   0, f"  Output    : {d.output_mw:>6.0f} MWe", mw_c);        row+=1
         lbl(row,   0, f"  Error     : {err:>+6.0f} MWe",

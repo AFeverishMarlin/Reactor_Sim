@@ -92,6 +92,7 @@ DEFAULT_IO_MAP = {
         "turbine_eff":      {"address": 7,  "scale_min": 0,   "scale_max": 35,    "description": "Turbine efficiency [%]"},
         "avg_iodine":       {"address": 8,  "scale_min": 0,   "scale_max": 1,     "description": "Average Iodine-135 [0–1]"},
         "avg_xenon":        {"address": 9,  "scale_min": 0,   "scale_max": 1,     "description": "Average Xenon-135 [0–1]"},
+        "target_mw":        {"address": 10, "scale_min": 0,   "scale_max": 1100,  "description": "Grid demand target MWe (0 when not in a shift game mode)"},
         # Temperature sensors base address 100 (30 sensors max)
         "tsensor_base":     {"address": 100, "scale_min": 0,  "scale_max": 500,   "description": "T-sensors base (TS-01..TS-30), 0°C–500°C → 0–32767, 32767=fault"},
         # Flux sensors base address 150 (20 sensors max)

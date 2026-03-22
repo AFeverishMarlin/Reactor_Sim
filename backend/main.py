@@ -163,6 +163,10 @@ async def _handle_ws_message(raw: str, ws: WebSocket):
         if not ok:
             await ws.send_text(json.dumps({"type": "error", "msg": err}))
 
+    elif cmd == "set_target_mw":
+        # Frontend pushes current grid demand each tick when in a shift mode
+        physics.cmd_set_target_mw(msg.get("target", 0.0))
+
     elif cmd == "set_rod_mode":
         physics.cmd_set_rod_mode(msg["rod_id"], msg["mode"])
 

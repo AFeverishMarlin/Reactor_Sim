@@ -93,6 +93,8 @@ class GlobalState:
     scram_done:   bool  = False
     meltdown:     bool  = False
     frame:        int   = 0
+    # Game demand target (set by frontend when in shift mode, 0 = not in shift mode)
+    target_mw: float = 0.0
     # Alarms
     alarms: Dict[str, bool] = field(default_factory=dict)
     # Log buffer (most recent events)
@@ -586,6 +588,7 @@ class ReactorPhysics:
         st.power = 0; st.temp = 40; st.pressure = 0.3; st.flux = 0
         st.xenon = 0; st.iodine = 0; st.void_fraction = 0; st.max_chan_t = 40
         st.scramming = False; st.scram_done = False; st.meltdown = False; st.frame = 0
+        st.target_mw = 0.0
         st.alarms = {k: False for k, _ in ALARM_DEFS}
         for r in self.rods:
             r.pos = r.target = 0; r.selected = False; r.mode = "auto"
@@ -613,6 +616,14 @@ class ReactorPhysics:
             # Write is NOT rejected during SCRAM — per requirement 4
             pass
         rod.target = max(0, min(100, float(target)))
+        return True, "ok"
+
+    def cmd_set_target_mw(self, target: float):
+        """Set the demand target MWe from the frontend game mode.
+        0 = no active shift mode (free play or standby).
+        Exposed as a Modbus Input Register so PLCs can read the current
+        grid demand and implement their own setpoint-tracking logic."""
+        self.state.target_mw = max(0.0, float(target))
         return True, "ok"
 
     def cmd_set_rod_pos(self, rod_id: str, pos: float):
@@ -738,6 +749,7 @@ class ReactorPhysics:
             "scramming":      st.scramming,
             "scram_done":     st.scram_done,
             "meltdown":       st.meltdown,
+            "target_mw":      round(st.target_mw, 1),
             "total_flow":     round(self.total_flow(), 1),
             "output_mw":      round(self.current_output_mw(), 1),
             "turbine_eff":    round(self.turbine_efficiency(), 2),
