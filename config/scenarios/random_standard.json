@@ -1,0 +1,17 @@
+{
+  "name": "Standard Shift - Random Faults",
+  "type": "random",
+  "description": "General purpose random fault scenario for Shift Supervisor mode. Balanced mix of pump trips, rod faults, and sensor failures. Suitable for first-year apprentices learning basic fault response.",
+
+  "min_interval_s": 45,
+  "max_interval_s": 120,
+  "max_concurrent_faults": 2,
+
+  "fault_weights": {
+    "pump_trip":      0.35,
+    "rod_fault":      0.25,
+    "sensor_fault_T": 0.20,
+    "sensor_fault_F": 0.15,
+    "pump_fault":     0.05
+  }
+}

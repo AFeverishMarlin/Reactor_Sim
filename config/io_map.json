@@ -1,0 +1,215 @@
+{
+  "_comment": "All Modbus addresses are 0-based (add 1 for display in some tools). Scale: raw = round(value * scale_factor) OR linear interp between scale_min/max \u2192 0-32767.",
+  "coils": {
+    "scram_command": {
+      "address": 0,
+      "description": "AZ-5 SCRAM command (write 1 to trigger)"
+    },
+    "pump_1_run": {
+      "address": 10,
+      "description": "MCP-1 run command"
+    },
+    "pump_2_run": {
+      "address": 11,
+      "description": "MCP-2 run command"
+    },
+    "pump_3_run": {
+      "address": 12,
+      "description": "MCP-3 run command"
+    },
+    "pump_4_run": {
+      "address": 13,
+      "description": "MCP-4 run command"
+    }
+  },
+  "discrete_inputs": {
+    "reactor_running": {
+      "address": 0,
+      "description": "Reactor running (power > 5%)"
+    },
+    "scram_active": {
+      "address": 1,
+      "description": "SCRAM active"
+    },
+    "meltdown": {
+      "address": 2,
+      "description": "Core damage"
+    },
+    "alarm_hipower": {
+      "address": 10,
+      "description": "HI REACTOR POWER alarm"
+    },
+    "alarm_hitemp": {
+      "address": 11,
+      "description": "HI CORE TEMP alarm"
+    },
+    "alarm_void": {
+      "address": 12,
+      "description": "HIGH VOID FRACTION alarm"
+    },
+    "alarm_locool": {
+      "address": 13,
+      "description": "LO COOLANT FLOW alarm"
+    },
+    "alarm_pumptrip": {
+      "address": 14,
+      "description": "PUMP TRIP alarm"
+    },
+    "alarm_scram": {
+      "address": 15,
+      "description": "AZ-5 SCRAM alarm"
+    },
+    "alarm_damage": {
+      "address": 16,
+      "description": "CORE DAMAGE alarm"
+    },
+    "alarm_hipress": {
+      "address": 17,
+      "description": "HI STEAM PRESSURE alarm"
+    },
+    "alarm_xenonpit": {
+      "address": 18,
+      "description": "XENON/IODINE PIT alarm"
+    },
+    "pump_1_running": {
+      "address": 30,
+      "description": "MCP-1 running"
+    },
+    "pump_1_fault": {
+      "address": 31,
+      "description": "MCP-1 fault"
+    },
+    "pump_2_running": {
+      "address": 33,
+      "description": "MCP-2 running"
+    },
+    "pump_2_fault": {
+      "address": 34,
+      "description": "MCP-2 fault"
+    },
+    "pump_3_running": {
+      "address": 36,
+      "description": "MCP-3 running"
+    },
+    "pump_3_fault": {
+      "address": 37,
+      "description": "MCP-3 fault"
+    },
+    "pump_4_running": {
+      "address": 39,
+      "description": "MCP-4 running"
+    },
+    "pump_4_fault": {
+      "address": 40,
+      "description": "MCP-4 fault"
+    },
+    "cr_status_base": {
+      "address": 100,
+      "description": "CR-01 status bits (4 per rod, 30 rods = addresses 100-219)"
+    },
+    "fuel_base": {
+      "address": 300,
+      "description": "Fuel channel installed bits (1=fuel present, 0=empty)"
+    }
+  },
+  "input_registers": {
+    "reactor_power": {
+      "address": 0,
+      "scale_min": 0,
+      "scale_max": 100,
+      "description": "Reactor thermal power [%]"
+    },
+    "output_mw": {
+      "address": 1,
+      "scale_min": 0,
+      "scale_max": 1100,
+      "description": "Electrical output [MWe]"
+    },
+    "steam_pressure": {
+      "address": 2,
+      "scale_min": 0,
+      "scale_max": 15,
+      "description": "Steam drum pressure [MPa]"
+    },
+    "total_flow": {
+      "address": 3,
+      "scale_min": 0,
+      "scale_max": 100,
+      "description": "Total coolant flow [%]"
+    },
+    "void_fraction": {
+      "address": 4,
+      "scale_min": 0,
+      "scale_max": 100,
+      "description": "Core void fraction [%]"
+    },
+    "avg_core_temp": {
+      "address": 5,
+      "scale_min": 0,
+      "scale_max": 500,
+      "description": "Average core temperature [\u00b0C]"
+    },
+    "max_chan_temp": {
+      "address": 6,
+      "scale_min": 0,
+      "scale_max": 500,
+      "description": "Max channel temperature [\u00b0C]"
+    },
+    "turbine_eff": {
+      "address": 7,
+      "scale_min": 0,
+      "scale_max": 35,
+      "description": "Turbine efficiency [%]"
+    },
+    "avg_iodine": {
+      "address": 8,
+      "scale_min": 0,
+      "scale_max": 1,
+      "description": "Average Iodine-135 [0\u20131]"
+    },
+    "avg_xenon": {
+      "address": 9,
+      "scale_min": 0,
+      "scale_max": 1,
+      "description": "Average Xenon-135 [0\u20131]"
+    },
+    "tsensor_base": {
+      "address": 100,
+      "scale_min": 0,
+      "scale_max": 500,
+      "description": "T-sensors base (TS-01..TS-30), 0\u00b0C\u2013500\u00b0C \u2192 0\u201332767, 32767=fault"
+    },
+    "fsensor_base": {
+      "address": 150,
+      "scale_min": 0,
+      "scale_max": 1.5,
+      "description": "F-sensors base (FS-01..FS-20), 0\u20131.5 \u2192 0\u201332767, 32767=fault"
+    },
+    "cr_pos_base": {
+      "address": 200,
+      "scale_min": 0,
+      "scale_max": 100,
+      "description": "CR positions base (CR-01..CR-30), 0\u2013100% \u2192 0\u201332767"
+    },
+    "pump_speed_base": {
+      "address": 250,
+      "scale_min": 0,
+      "scale_max": 100,
+      "description": "Pump actual speeds (MCP-1..4), 0\u2013100% \u2192 0\u201332767"
+    }
+  },
+  "holding_registers": {
+    "cr_setpoint_base": {
+      "address": 0,
+      "scale_min": 0,
+      "scale_max": 100,
+      "description": "CR setpoints base (CR-01..CR-30), 0\u201332767 \u2192 0\u2013100%"
+    },
+    "pump_setpoint_base": {
+      "address": 100,
+      "scale_min": 0,
+      "scale_max": 100,
+      "description": "Pump speed setpoints (MCP-1..4), 0\u201332767 \u2192 0\u2013100%"
+    }
+  }
+}

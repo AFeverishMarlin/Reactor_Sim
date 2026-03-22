@@ -1,0 +1,71 @@
+1. Learning ojectives and audience
+- PID , analog, and IO control
+- Read and Write
+- First year of PLC. Will be taught some basic ideas prior to use 
+- reactor just happens to be the process
+
+2. PLC hardware and Software
+- PLC platforms could be Siemens S7, Allen Bradley/ Rockwell , Schnieder, Mistubishi, and Open PLC
+- Physical Hardware will be available
+- Programing enviroments will be the enviorments used for the respective platforms
+- Programs will be in either ladder or Function block
+
+3. Communication Protocol
+- Modbus is a starting point as its supported cross platform for PLCs
+- OPC-UA is also applicable. However they will cover SCADA and HMI programming seperatly
+- MQTT is not used in any of our facilites
+- No Modbus Serial required
+- System will be a server (PLC will be used to read and control the reactor)
+
+4.Variables
+-Read: 
+*Each core temperature sensor -analogue
+*Each core flux sensor -analogue
+*Each core control rod  read position -analogue
+*Each core control rod in Manual or Auto
+*Each core control rod at 0%
+*Each core control rod at 100%
+*Each core fuel rod installed or empty
+*Rector power % -analogue
+*Rector MWe Output -analogue
+*Rector Steam Pressure -analogue
+*Rector Coolant Flow Total -analogue
+*Rector Void Fraction -analogue
+*Each pump flow % -analogue
+*Turbine efficiency -analogue
+
+
+-Write:
+*Each core control rod set position -analogue
+*Each pump on or off
+*Each pump flow % -analogue
+*SCRAM COMMAND
+
+Only the instructor will fault or unfault sensors and pumps, put rods into manual etc
+
+Each pump and rod should be treated individually. Any grouping will be handled by the PLC
+Analog units should be available as both a Raw and scaled float value 
+
+
+5. Network and Deployment Architecture
+- Simulator will run on a local PC/ LAN
+- LAN is isolated
+- One simulator per PLC training station
+- workstation will likely be fixed however i would like to allow trainiees to run it on their own PC if they want to aswell
+
+
+6. HMI and SCADA
+- No HMI or SCADA will be used in this system . Apprentices may choose to build their own and intergrate it with the PLC but it will not talk to the application
+
+7. Teck stack
+- use python for the backend as the apprentices also do a python module as part of their training so they will have some understanding as to how the back end is working
+-Browser should remain as a realtime UI so that instructors can cause faults etc, and so that apprentices may use it to help debug their PLC code, and practice / iterate by deliberately causing faults
+
+8. Instructor Controls
+- Instructor does not need a sperate interface as the existing interface should have enough controls in it already
+- Yes lets add a pause, reset, and slow/ fast motion options
+- Yes allow scenario authoring as an option to trigger events at specific times, but also allow a more random option with scalable probabilities and options to limit the number of various failures
+- Retain the last 10 scores locally along with statistics. Also retain between sessions the settings for network and IO addresses etc and  bits coils, registers, or what ever option is implemented for the IO and network settings. Also try and store any scenario authoring 
+
+9. Complience
+- Software will be installed on a standalone PC. No requirements for IT security. PC will be standalone with no internet access (LAN ONLY), but may have Trelix anti virus isntalled

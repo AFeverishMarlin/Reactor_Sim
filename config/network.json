@@ -1,0 +1,16 @@
+{
+  "modbus_tcp": {
+    "enabled": true,
+    "host": "0.0.0.0",
+    "port": 502,
+    "unit_id": 1
+  },
+  "opc_ua": {
+    "enabled": false,
+    "endpoint": "opc.tcp://0.0.0.0:4840/reactor"
+  },
+  "web_ui": {
+    "host": "0.0.0.0",
+    "port": 8080
+  }
+}

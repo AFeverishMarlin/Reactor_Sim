@@ -1,0 +1,33 @@
+{
+  "name": "Iodine Pit Recovery",
+  "type": "scripted",
+  "description": "Teaches apprentices about xenon poisoning after a power reduction. The reactor is brought to partial power, then power is reduced sharply. Students must observe the xenon build-up and attempt recovery. Demonstrates why the RBMK design was particularly dangerous at low power.",
+
+  "initial_state": {
+    "rod_positions_pct": 65,
+    "pump_speeds_pct": 80
+  },
+
+  "events": [
+    {
+      "trigger": {"type": "time", "seconds": 5},
+      "action":  {"type": "note", "message": "EXERCISE: Bring reactor to approximately 70% power by adjusting rod withdrawal. Allow 30 seconds to stabilise."}
+    },
+    {
+      "trigger": {"type": "time", "seconds": 60},
+      "action":  {"type": "note", "message": "EXERCISE: Now reduce power to below 30% by inserting rods. Observe the xenon and iodine gauges."}
+    },
+    {
+      "trigger": {"type": "condition", "variable": "xenon", "operator": ">", "value": 0.25},
+      "action":  {"type": "note", "message": "ALERT: Xenon-135 rising above 0.25 — reactivity suppression increasing. Power recovery becoming difficult."}
+    },
+    {
+      "trigger": {"type": "condition", "variable": "xenon", "operator": ">", "value": 0.35},
+      "action":  {"type": "note", "message": "ALARM: Xenon pit developing. To recover, you must withdraw almost all rods — this leaves very low ORM (Operational Reactivity Margin). This is exactly the situation at Chernobyl Unit 4 at 01:23 on 26 April 1986."}
+    },
+    {
+      "trigger": {"type": "time", "seconds": 180},
+      "action":  {"type": "note", "message": "DISCUSSION POINT: Why is it dangerous to have nearly all rods withdrawn? What happens if a void fraction spike occurs now?"}
+    }
+  ]
+}
